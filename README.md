@@ -1,6 +1,6 @@
 ## Microsoft Exchange Online SMTP OAuth 2.0 setup script and test client
 
-This repository provide a test tool and script for enabling OAuth 2.0 authentication with SMTP in Microsoft Exchange Online and Microsoft Entra. It is designed to help developers and administrators replace legacy username/password authentication with modern, secure token-based access for sending emails through Exchange Online.
+This repository provide a [test tool](.\java\README.md) and [setup script](.\ps\README.md) for enabling OAuth 2.0 authentication with SMTP in Microsoft Exchange Online and Microsoft Entra. It is designed to help developers and administrators replace legacy username/password authentication with modern, secure token-based access for sending emails through Exchange Online.
 
 ## Contributing
 
