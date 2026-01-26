@@ -5,8 +5,8 @@ param (
 )
 
 function Show-Usage {
-    Write-Host "Usage: setupOAuth2.ps1 -appName <SMTP application name> -mailboxName <shared mailbox name> [-certFile <complete path to certificate file>] [-groupName <mail-enabled security group name>]"
-    Write-Host "Example: SetupEntra.ps1 -appName MySMTPApp -mailboxName shared@mail.com -certFile 'C:\path\to\cert.cer' -groupName MyMailEnabledGroup"
+    Write-Host "Usage: setupOAuth2.ps1 -appName <SMTP application name> -mailboxName <shared mailbox name> [-certFile <complete path to certificate file>]"
+    Write-Host "Example: setupOAuth2.ps1 -appName MySMTPApp -mailboxName shared@mail.com -certFile 'C:\path\to\cert.cer'"
     exit 1
 }
 
@@ -63,21 +63,10 @@ if (Get-Module -Name ExchangeOnlineManagement -ListAvailable) {
 # Connect to Entra with required scopes
 Write-Output "Connecting to Entra ID tenant in a browser window..."
 # Note: The -ContextScope 'Process' parameter is used to ensure that the connection is scoped to the current PowerShell process.
-Connect-Entra -ContextScope 'Process' -Scopes 'Application.ReadWrite.All', 'AppRoleAssignment.ReadWrite.All', 'GroupMember.Read.All' -NoWelcome
+Connect-Entra -ContextScope 'Process' -Scopes 'Application.ReadWrite.All', 'AppRoleAssignment.ReadWrite.All' -NoWelcome
 $tenantId=(Get-EntraContext).TenantId
 $userName=(Get-EntraContext).Account
 Write-Output "Connected to Entra ID tenant $($tenantId) as $($userName)."
-
-# Check if the mail-enabled security group exists if $groupName is provided
-if ($groupName) {
-    $group = Get-EntraGroup -Filter "DisplayName eq '$($groupName)'" -ErrorAction SilentlyContinue
-    if (-not $group) {
-        Write-Output "Mail-enabled security group $($groupName) does not exist. Please create the mail-enabled security group before running this script."
-        exit 1
-    } else {
-        Write-Output "Mail-enabled security group $($groupName) found with ID $($group.Id)."
-    }
-}
 
 # Check if the application already exists
 $app = Get-EntraApplication -Filter "DisplayName eq '$($appName)'" -ErrorAction SilentlyContinue
